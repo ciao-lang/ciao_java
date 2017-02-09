@@ -16,8 +16,12 @@ PROLOGSERVER=$(JAVALL)/plserver
 
 all: classes prolog
 
-run:
+run_queens:
 	$(JAVAEXECUTE) $(JAVAFLAGS) queens $(PROLOGSERVER)
+run_example0:
+	$(JAVAEXECUTE) $(JAVAFLAGS) example0 $(PROLOGSERVER)
+run_example1:
+	$(JAVAEXECUTE) $(JAVAFLAGS) example1 $(PROLOGSERVER)
 
 classes:
 	-$(JAVAC) $(JAVACFLAGS) $(JAVASOURCES)
