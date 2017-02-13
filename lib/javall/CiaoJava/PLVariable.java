@@ -53,7 +53,7 @@ public class PLVariable extends PLTerm {
    * free variable test. Returns true if this Prolog variable is
    * unbound.
    *
-   * @return <code>true</code> if this Prolog variable is unbound<
+   * @return <code>true</code> if this Prolog variable is unbound
    *         <code>false</code> if is bound to anothe Prolog term.
    */
   public boolean isFree() {
@@ -154,8 +154,7 @@ public class PLVariable extends PLTerm {
    *
    * @return <code>true</code> if the <code>PLTerm</code> object
    *         is exactly a <code>PLVariable</code> object and
-   *         has the same variable number<
-   *         <code>false</code> otherwise.
+   *         has the same variable number <code>false</code> otherwise.
    */
   public boolean equals(PLTerm t) {
 

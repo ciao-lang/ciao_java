@@ -23,6 +23,7 @@ public class PLList extends PLTerm {
      * @param h First element of the list. Can be any Prolog term.
      * @param t Rest of the list. Must be nil (if the list contains
      *          just one element), or another <code>PLList</code> object.
+     * @throws PLException if there are problems regarding the Prolog process.
      */
     public PLList(PLTerm h, PLTerm t) throws PLException {
 	Type = PLTerm.LIST;
@@ -44,6 +45,7 @@ public class PLList extends PLTerm {
      *
      * @param list Java list that contains the elements that must be
      *             included in the Prolog list.
+     * @throws PLException if there are problems regarding the Prolog process.
      */
     public PLList(PLTerm list[]) throws PLException {
 	Type = PLTerm.LIST;
@@ -71,6 +73,7 @@ public class PLList extends PLTerm {
      *
      * @param s Java string that contains the characters that must be
      *          included in the Prolog list as elements.
+     * @throws PLException if there are problems regarding the Prolog process.
      */
     public PLList(String s) throws PLException {
 	Type = PLTerm.LIST;
@@ -184,6 +187,7 @@ public class PLList extends PLTerm {
      *
      * @param term <code>PLTerm</code> object to be appended at the 
      *             end of this list.
+     * @throws PLException if there are problems regarding the Prolog process.
      */
     public void add(PLTerm term) throws PLException {
 	PLList mytail = this;
@@ -200,6 +204,7 @@ public class PLList extends PLTerm {
      * @param tail <code>PLList</code> object or 
      *             <code>PLTerm.nil</code> to be appended at the  
      *             end of this list.
+     * @throws PLException if there are problems regarding the Prolog process.
      */
     public void append(PLTerm tail) throws PLException {
 	PLList mytail = this;
@@ -266,7 +271,7 @@ public class PLList extends PLTerm {
      * received as argument. This method overrides the one 
      * inherited from PLTerm.
      * 
-     * <p><bold>Important:</bold> The unification is 'two sided':
+     * <p><b>Important:</b> The unification is 'two sided':
      * the variables found in the term received as argument could
      * be bound in order to unify the complete terms. In the same
      * way, the variables found in this list could be bound to

@@ -145,6 +145,8 @@ public class PLString extends PLTerm {
      * of ASCII codes of this string.
      *
      * @return the list of ASCII codes of this Prolog string. 
+     *
+     * @throws PLException if there are problems regarding the Prolog process.
      */
     public PLList toPLList() throws PLException {
 

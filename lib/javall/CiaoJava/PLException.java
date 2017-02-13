@@ -8,7 +8,7 @@ package CiaoJava;
 public class PLException extends Exception {
 
   /**
-   * Creates a new <code/>PLException</code>
+   * Creates a new <code>PLException</code>
    * with no description.
    */
   public PLException() {
@@ -18,7 +18,7 @@ public class PLException extends Exception {
   }
 
   /**
-   * Creates a new <code/>PLException</code>
+   * Creates a new <code>PLException</code>
    * with the description given as argument.
    *
    * @param s String that contains the description of the

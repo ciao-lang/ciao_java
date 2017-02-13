@@ -48,8 +48,7 @@ public class PLGoal {
    *
    * @param		term	Prolog term that represents the goal that
    *          			will be evaluated.
-   * @exception         <code>PLException</code> if there is no
-   *                    connection to Prolog. 
+   * @throws PLException if there is no connection to Prolog. 
    */
   public PLGoal(PLTerm term) throws PLException {
 
@@ -92,8 +91,8 @@ public class PLGoal {
    *                            <code>PLStructure</code> object or a 
    *                            <code>PLAtom</code> object. 
    *
-   * @exception         <code>PLException</code> if there is no
-   *                    connection to Prolog. 
+   * @throws IOException if the socket stream has been broken.
+   * @throws PLException if there are problems regarding the Prolog process.
    */
   public PLGoal(String term) 
     throws IOException, PLException {
@@ -123,6 +122,8 @@ public class PLGoal {
    *          			This term must be a
    *                            <code>PLStructure</code> object or a 
    *                            <code>PLAtom</code> object. 
+   * @throws IOException if the socket stream has been broken.
+   * @throws PLException if there are problems regarding the Prolog process.
    */
   public PLGoal(PLConnection where, String term) 
     throws IOException, PLException {
@@ -141,11 +142,11 @@ public class PLGoal {
    * goal, the {@link #nextSolution()} method must be called, once for
    * each solution.
    *
-   * @exception <code>IOException</code>, <code>PLException</code>
-   *            if there is any problem 
-   *            communicating with the Prolog process, or in the
-   *            Prolog side (e.g., the predicate to be launched
-   *            does not exist, or the goal has been launched yet).
+   * @throws IOException if there is any problem communicating with
+   *            the Prolog process
+   * @throws PLException if there is any problem in the Prolog side
+   *            (e.g., the predicate to be launched does not exist, or
+   *            the goal has been launched yet).
    */
   public void query() throws IOException, PLException {
 
@@ -196,9 +197,9 @@ public class PLGoal {
    *          variables unified with the solution.
    * @return  <code>null</code> if there are no more solutions.
    *
-   * @exception <code>IOException</code> if there are any error on 
+   * @throws IOException if there are any error on 
    *            the sockets.
-   * @exception <code>PLException</code> if there are any error on 
+   * @throws PLException if there are any error on 
    *            the Prolog process. If the Prolog goal raises an
    *            exception, it is propagated through the interface, 
    *            and a <code>PLException</code> is raised in the
@@ -246,9 +247,9 @@ public class PLGoal {
    * @return  <code>false</code> if the goal was not launched due
    *          to any reason.
    *
-   * @exception <code>IOException</code> if there are any error on 
+   * @throws IOException if there are any error on 
    *            the sockets.
-   * @exception <code>PLException</code> if there are any error on
+   * @throws PLException if there are any error on
    *            the Prolog process. If the Prolog goal raises an
    *            exception, it is propagated through the interface,
    *            and a <code>PLException</code> is raised in the
@@ -289,9 +290,9 @@ public class PLGoal {
    * @return  false if the goal has returned all solutions and is not
    *          running.
    *
-   * @exception <code>IOException</code> if there are any error on
+   * @throws IOException if there are any error on
    *            the sockets.
-   * @exception <code>PLException</code> if there are any error on
+   * @throws PLException if there are any error on
    *            the Prolog process. If the Prolog goal raises an
    *            exception, it is propagated through the interface,
    *            and a <code>PLException</code> is raised in the
@@ -330,9 +331,9 @@ public class PLGoal {
   /**
    * Terminates this Prolog goal execution.
    *
-   * @exception IOException if there are any error on the socket 
+   * @throws IOException if there are any error on the socket 
    *            communication
-   * @exception PLException if there are any error on the Prolog
+   * @throws PLException if there are any error on the Prolog
    *            process
    *
    */
@@ -358,8 +359,8 @@ public class PLGoal {
    * @param module Prolog term that represents the name of the module
    *               to be loaded. Can be used the library(module) format.
    *
-   * @exception IOException if there are any I/O error with the sockets 
-   * @exception PLException if there are any error in the Prolog process
+   * @throws IOException if there are any I/O error with the sockets 
+   * @throws PLException if there are any error in the Prolog process
    */
   public void useModule(PLTerm module) throws IOException, PLException {
     
@@ -393,8 +394,8 @@ public class PLGoal {
    *               library(module) format. The path must be accesible
    *               to the Prolog server.
    *
-   * @exception IOException if there are any I/O error with the sockets 
-   * @exception PLException if there are any error in the Prolog process
+   * @throws IOException if there are any I/O error with the sockets 
+   * @throws PLException if there are any error in the Prolog process
    *
    */
   public void useModule(String module) throws IOException, PLException {
@@ -444,9 +445,9 @@ public class PLGoal {
    *  @param     termString <code>String</code> object that represents
    *             a well formed Prolog term.
    *  @return    the <code>PLTerm</code> that represents this Prolog term.
-   *  @exception <code>IOException</code> if the socket stream has been
+   *  @throws IOException if the socket stream has been
    *             broken.
-   *  @exception <code>PLException</code> if there is a problem parsing
+   *  @throws PLException if there is a problem parsing
    *             the term on the Prolog side.
    **/
   private PLTerm parseTerm(String termString) 

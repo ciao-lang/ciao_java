@@ -20,6 +20,8 @@ public class PLServerSocket {
    * higher, and prints the port # at the standard output.
    * When the openSocket() method be called, the object will be
    * listening at this port number for connections.
+   *
+   * @throws IOException if the socket stream has been broken.
    */
   public PLServerSocket() throws IOException {
     boolean done = false;
@@ -43,7 +45,8 @@ public class PLServerSocket {
    *
    * @return A <code>Socket</code> object that represents the
    *         connection accepted.
-   **/
+   * @throws IOException if the socket stream has been broken.
+   */
   public Socket openSocket() throws IOException {
     
     Socket s = sock.accept();
@@ -62,7 +65,9 @@ public class PLServerSocket {
    *
    * @return  the <code>BufferedReader</code> object that represents
    *          the reader of the socket received as argument.
-   **/
+   *
+   * @throws IOException if the socket stream has been broken.
+   */
   protected static BufferedReader getReader(Socket s) throws IOException {
     return new BufferedReader(new InputStreamReader(s.getInputStream()));
   }
@@ -76,7 +81,9 @@ public class PLServerSocket {
    *
    * @return  the <code>PrintWriter</code> object that represents
    *          the writer of the socket received as argument.
-   **/
+   *
+   * @throws IOException if the socket stream has been broken.
+   */
   protected static PrintWriter getWriter(Socket s) throws IOException {
     return new PrintWriter(s.getOutputStream());
   }

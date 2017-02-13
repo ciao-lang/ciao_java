@@ -203,7 +203,7 @@ public class PLStructure extends PLTerm {
    * received as argument. This method overrides the one 
    * inherited from PLTerm.
    * 
-   * <p><bold>Important:</bold> The unification is 'two sided':
+   * <p><b>Important:</b> The unification is 'two sided':
    * the variables found in the term received as argument could
    * be bound in order to unify the complete terms. In the same
    * way, the variables found in this structure could be bound to

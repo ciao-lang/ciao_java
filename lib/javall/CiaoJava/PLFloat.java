@@ -100,7 +100,7 @@ public class PLFloat extends PLTerm {
    * @param t Prolog term to compare to.
    *
    * @return <code>true</code> if the Prolog term received as 
-   *         argument is equal to this <code>PLFloat</code><
+   *         argument is equal to this <code>PLFloat</code>
    *         <code>false</code> otherwise.
    */
   public boolean equals(PLTerm t) {

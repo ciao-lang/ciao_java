@@ -17,6 +17,8 @@ public class PLJavaServer {
      * prepares the server to receive Prolog requests.
      * If there is any error creating sockets terminates
      * the Java process.
+     *
+     * @param argv argument list
      */
     public static void main(String argv[]) {
 

@@ -928,8 +928,7 @@ class PLInterpreter {
      * @param obj Object on which the method will be invoked.
      * @param arg List of argument values to invoke the method.
      *
-     * @exception <code>Exception</code> if there is any problem invoking
-     *            the method.
+     * @throws Exception if there is any problem invoking the method.
      **/
     private Object invoke(Method mt, Object obj, Object arg[])
 	throws Exception {

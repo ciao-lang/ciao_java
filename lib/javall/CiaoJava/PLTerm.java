@@ -213,7 +213,7 @@ public abstract class PLTerm extends Object {
    *            Prolog Exception term, if a problem has been
    *            found translating the term to a Prolog goal.
    *
-   * @exception PLGoalException if this term cannot be a Prolog goal.
+   * @throws PLGoalException if this term cannot be a Prolog goal.
    */
   void launchGoal(PLInterpreter i,PLConnection pl)
       throws PLGoalException {
@@ -227,7 +227,7 @@ public abstract class PLTerm extends Object {
    * Term unification. Unifies this Prolog term with the term
    * received as argument. 
    * 
-   * <p><bold>Important:</bold> The unification is 'two sided':
+   * <p><b>Important:</b> The unification is 'two sided':
    * the variables found in the term received as argument could
    * be bound in order to unify the complete terms. In the same
    * way, the variables found in this term could be bound to
@@ -264,7 +264,7 @@ public abstract class PLTerm extends Object {
    *
    * @param term Term to be used as pattern.
    *
-   * @exception PLException if this term cannot be backtracked.
+   * @throws PLException if this term cannot be backtracked.
    */
   void backtrack(PLTerm term) throws PLException {
 
@@ -465,7 +465,7 @@ public abstract class PLTerm extends Object {
    *
    * @return a Prolog term object with the term read.
    *
-   * @exception PLException if raises any error reading the term.
+   * @throws PLException if raises any error reading the term.
    */
   static PLTerm fastRead(BufferedReader in) throws PLException {
 
@@ -526,8 +526,7 @@ public abstract class PLTerm extends Object {
    *
    * @return    The integer read.
    *
-   * @exception <code>PLException</code> if the integer
-   *            received is not a valid Java integer.
+   * @throws PLException if the integer received is not a valid Java integer.
    */
   private static int getInt(BufferedReader in) throws PLException {
     int value = 0;
@@ -553,8 +552,7 @@ public abstract class PLTerm extends Object {
    *
    * @return    The long read.
    *
-   * @exception <code>PLException</code> if the long
-   *            received is not a valid Java long.
+   * @throws PLException if the long received is not a valid Java long.
    */
   private static long getLong(BufferedReader in) throws PLException {
     long value = 0;
@@ -580,8 +578,7 @@ public abstract class PLTerm extends Object {
    *
    * @return    The float read. 
    *
-   * @exception <code>PLException</code> if the float received
-   *            is not a valid Java float.
+   * @throws PLException if the float received is not a valid Java float.
    */
   private static float getFloat(BufferedReader in) throws PLException {
     float value = 0;
@@ -607,8 +604,8 @@ public abstract class PLTerm extends Object {
    *
    * @return    The character read. 
    *
-   * @exception <code>PLException</code> if the <code>BufferedReader</code>
-   *            does not allow more read operations.
+   * @throws PLException if the <code>BufferedReader</code> does not
+   *         allow more read operations.
    */
   private static char getChar(BufferedReader in) throws PLException {
 
@@ -635,9 +632,9 @@ public abstract class PLTerm extends Object {
    *
    * @return    The string read. 
    *
-   * @exception <code>PLException</code> if the <code>BufferedReader</code>
-   *            does not allow more read operations, and '\0'
-   *            is missing.
+   * @throws PLException if the <code>BufferedReader</code>
+   *         does not allow more read operations, and '\0'
+   *         is missing.
    */
   private static String getString(BufferedReader in) throws PLException {
 
@@ -658,8 +655,7 @@ public abstract class PLTerm extends Object {
    *
    * @return    The term read. 
    *
-   * @exception <code>PLException</code> if there is any problem
-   *            during the term parsing.
+   * @throws PLException if there is any problem during the term parsing.
    */
   private static PLTerm getTerm(BufferedReader in) throws PLException {
     String name;

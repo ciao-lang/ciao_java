@@ -8,7 +8,7 @@ package CiaoJava;
 public class PLGoalException extends PLException {
 
   /**
-   * Creates a new <code/>PLGoalException</code>
+   * Creates a new <code>PLGoalException</code>
    * with no description.
    */
   public PLGoalException() {
@@ -18,7 +18,7 @@ public class PLGoalException extends PLException {
   }
 
   /**
-   * Creates a new <code/>PLGoalException</code>
+   * Creates a new <code>PLGoalException</code>
    * with the description given as argument.
    *
    * @param s Description to include to the goal exception.

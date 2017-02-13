@@ -60,6 +60,9 @@ public class PLConnection {
      * standard output stream.
      * Once a Prolog process connects to it, starts the internal 
      * threads to manage the communication.
+     *
+     * @throws IOException if the socket stream has been broken.
+     * @throws PLException if there are problems regarding the Prolog process.
      */
     public PLConnection() throws PLException, IOException {
 	ss = new ServerSocket(0);
@@ -78,6 +81,8 @@ public class PLConnection {
      *                     client that wants to connect to it.
      *                     This constructor allows an array of strings
      *                     for command-line arguments.
+     * @throws IOException if the socket stream has been broken.
+     * @throws PLException if there are problems regarding the Prolog process.
      */
     public PLConnection(String[] where) throws PLException, IOException {
 	ss = new ServerSocket(0);
@@ -94,6 +99,8 @@ public class PLConnection {
      *                     established to the newly created Prolog
      *                     process, instead of waiting for any Prolog
      *                     client that wants to connect to it.
+     * @throws IOException if the socket stream has been broken.
+     * @throws PLException if there are problems regarding the Prolog process.
      */
     public PLConnection(String where) throws PLException, IOException {
 	ss = new ServerSocket(0);
@@ -112,6 +119,9 @@ public class PLConnection {
      * 
      * @param ss <code>ServerSocket</code> object representing a new
      *           Prolog/Java server socket object.
+     *
+     * @throws IOException if the socket stream has been broken.
+     * @throws PLException if there are problems regarding the Prolog process.
      */
     public PLConnection(ServerSocket ss) throws PLException, IOException {
 	this.ss = ss;
@@ -134,6 +144,9 @@ public class PLConnection {
      *                     client that wants to connect to it.
      *                     This constructor allows an array of strings
      *                     for command-line arguments.
+     *
+     * @throws IOException if the socket stream has been broken.
+     * @throws PLException if there are problems regarding the Prolog process.
      */
     public PLConnection(int port, String[] where) throws PLException, IOException {
 	this.ss = new ServerSocket(port,2);
@@ -149,6 +162,8 @@ public class PLConnection {
      *                     waiting for Java connection.
      * @param    port      Port number to be used for the internal 
      *                     communication to Prolog side.
+     * @throws IOException if the socket stream has been broken.
+     * @throws PLException if there are problems regarding the Prolog process.
      */
     public PLConnection(String host,int port) throws PLException, IOException {
 	start(host,port);
@@ -164,8 +179,8 @@ public class PLConnection {
      *
      * @param where command used to start the Prolog server process.
      *
-     * @exception IOException if there are I/O problems.
-     * @exception PLException if there are problems regarding the Prolog
+     * @throws IOException if there are I/O problems.
+     * @throws PLException if there are problems regarding the Prolog
      *                        process.
      */
     private void start(String where) throws IOException, PLException {
@@ -196,8 +211,8 @@ public class PLConnection {
      * @param where command used to start the Prolog server process,
      *              including optional arguments.
      *
-     * @exception IOException if there are I/O problems.
-     * @exception PLException if there are problems regarding the Prolog
+     * @throws IOException if there are I/O problems.
+     * @throws PLException if there are problems regarding the Prolog
      *                        process.
      */
     private void start(String[] where) throws IOException, PLException {
@@ -224,11 +239,12 @@ public class PLConnection {
      * interface, connecting to an already executing Prolog server,
      * listening at port given as argument.
      *
+     * @param  host           host name of the Prolog server
      * @param  port           port number to which the Prolog
      *                        server is waiting for Java connection.
      *
-     * @exception IOException if there are I/O problems.
-     * @exception PLException if there are problems regarding the Prolog
+     * @throws IOException if there are I/O problems.
+     * @throws PLException if there are problems regarding the Prolog
      *                        process.
      */
     public void start(String host, int port) throws IOException, PLException {
@@ -241,8 +257,8 @@ public class PLConnection {
      * Starts the PLConnection for the Prolog-to-Java
      * interface: waits for a Prolog connection.
      *
-     * @exception IOException if there are I/O problems.
-     * @exception PLException if there are problems regarding the Prolog
+     * @throws IOException if there are I/O problems.
+     * @throws PLException if there are problems regarding the Prolog
      *                        process.
      */
     public void start() throws IOException, PLException {
@@ -260,8 +276,8 @@ public class PLConnection {
      * In this case the java process hangs indefinitely, a not expected behavior.
      * ifDiedThrowException: Switches between throw exception or return true when died.
      *
-     * @exception IOException if there are I/O problems.
-     * @exception PLException if there are problems regarding the Prolog
+     * @throws IOException if there are I/O problems.
+     * @throws PLException if there are problems regarding the Prolog
      *                        process.
      */
     private Boolean plProcHasNotDied (Boolean ifDiedThrowException) throws PLException {
@@ -292,6 +308,8 @@ public class PLConnection {
     /**
      * Gets the Prolog Interpreter object used to interpret 
      * Prolog terms received from the Prolog side of the interface.
+     *
+     * @return the interpreter
      */
     public PLInterpreter getInterpreter() {
 	return plInterpreter;
@@ -414,8 +432,8 @@ public class PLConnection {
      *
      * @return The <code>PLGoal</code> object created to manage the goal.
      *
-     * @exception IOException if there are I/O problems.
-     * @exception PLException if there are problems regarding the Prolog
+     * @throws IOException if there are I/O problems.
+     * @throws PLException if there are problems regarding the Prolog
      *                        process.
      */
     public PLGoal query(PLTerm term) throws PLException, IOException {
@@ -462,8 +480,8 @@ public class PLConnection {
      *
      * @return Prolog term received from the prolog-to-java socket.
      *
-     * @exception IOException if the socket stream has been broken.
-     * @exception PLException if there are problems regarding the Prolog
+     * @throws IOException if the socket stream has been broken.
+     * @throws PLException if there are problems regarding the Prolog
      *                        process.
      */
     PLTerm fromPrologPJ() throws PLException {
@@ -484,8 +502,8 @@ public class PLConnection {
      *
      * @return Prolog term received from the Prolog-to-Java socket.
      *
-     * @exception IOException if the socket stream has been broken.
-     * @exception PLException if there are problems regarding the Prolog
+     * @throws IOException if the socket stream has been broken.
+     * @throws PLException if there are problems regarding the Prolog
      *                        process.
      */
     PLTerm fromPrologJP(PLTerm id) throws PLException {
@@ -499,25 +517,26 @@ public class PLConnection {
      * Closes the communication to the Prolog side and terminates the
      * Prolog process.
      * 
-     * @exception IOException if the socket stream has been broken.
-     * @exception PLException if there are problems regarding the Prolog
+     * @throws IOException if the socket stream has been broken.
+     * @throws PLException if there are problems regarding the Prolog
      *                        process.
      * @deprecated This method is deprecated. Use <code>stop</code> 
      *             method instead.
+     * @throws InterruptedException interruption received.
+     * @throws IOException if the socket stream has been broken.
+     * @throws PLException if there are problems regarding the Prolog process.
      */
     public void close() throws InterruptedException, IOException, PLException {
-
 	stop();
-
     }
 
     /**
      * Stops the interface. Stops the internal threads and closes
      * the streams related to this interface.
      *
-     * @exception IOException if the socket stream has been broken.
-     * @exception PLException if there are problems regarding the Prolog
-     *                        process.
+     * @throws InterruptedException interruption received.
+     * @throws IOException if the socket stream has been broken.
+     * @throws PLException if there are problems regarding the Prolog process.
      */
     public void stop() throws InterruptedException, IOException, PLException {
 
@@ -530,7 +549,8 @@ public class PLConnection {
     /**
      * Closes interface sockets and related streams.
      *
-     * @exception IOException if the socket stream has been broken.
+     * @throws InterruptedException interruption received.
+     * @throws IOException if the socket stream has been broken.
      */
     protected void closeSocketStreams() throws InterruptedException, 
                                                IOException { 
@@ -548,6 +568,9 @@ public class PLConnection {
 
     /**
      * Waits until all the internal threads terminate.
+     *
+     * @throws InterruptedException interruption received.
+     * @throws IOException if the socket stream has been broken.
      */
     public void join() throws InterruptedException, IOException {
 
@@ -560,6 +583,8 @@ public class PLConnection {
 
     /**
      * Waits until socket handling threads terminate.
+     *
+     * @throws InterruptedException interruption received.
      */
     protected void joinSocketHandlers() throws InterruptedException {
 
@@ -571,6 +596,8 @@ public class PLConnection {
 
     /**
      * Returns the last started connection to a Prolog process.
+     *
+     * @return last started connection
      */
     public static PLConnection getPreviousConnection() {
 	return previousConnection;
