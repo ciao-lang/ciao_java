@@ -9,7 +9,7 @@
 :- use_module(library(process), [process_call/3]).
 :- use_module(library(lists), [append/3]).
 
-:- bundle_flag(with_java_interface, [
+:- bundle_flag(enabled, [
     comment("Enable Java interface"),
     valid_values(['yes', 'no']),
     %
@@ -20,12 +20,12 @@
         "you stop the Ciao configuration now and install Java first."),
 % 	    "If Java is already installed and you use Debian/Ubuntu perhaps\n"||
 % 	    "you forgot to run: sudo update-java-alternatives --set java-6-sun."
-    rule_default(VerifyJava, verify_java(VerifyJava)),
+    rule_default(HasJava, has_javac(HasJava)),
     %
     interactive([advanced])
 ]).
 
-verify_java(Value) :-
+has_javac(Value) :-
 	( javac_installed, javadoc_installed -> Value = yes ; Value = no ).
 
 javac_installed :-
@@ -60,18 +60,18 @@ javadoc_installed :- find_executable('javadoc', _).
     valid_values(['yes', 'no']),
     %
     default_comment("Ant detected"),
-    rule_default(VerifyAnt, (
-      flag(with_java_interface(WithJavaInterface)),
-      verify_ant(WithJavaInterface, VerifyAnt))),
+    rule_default(HasAnt, (
+      flag(enabled(EnabledJava)),
+      has_ant(EnabledJava, HasAnt))),
     %
     interactive([advanced])
 ]).
 
-verify_ant(no,  no).
-verify_ant(yes, VerifyAnt) :-
-	verify_ant_yes(VerifyAnt).
+has_ant(no,  no).
+has_ant(yes, HasAnt) :-
+	has_ant_(HasAnt).
 
-verify_ant_yes(Value) :-
+has_ant_(Value) :-
 	( ant_installed -> Value = yes ; Value = no ).
 
 ant_installed :- find_executable('ant', _).
@@ -102,16 +102,16 @@ get_ant_cmd(CmdPath) :-
 
 '$builder_hook'(item_nested(java)). % item for .java code
 
-with_java_interface := ~get_bundle_flag(ciao_java:with_java_interface).
+enabled := ~get_bundle_flag(ciao_java:enabled).
 
 '$builder_hook'(java:build_bin) :- !,
-	( with_java_interface(yes) ->
+	( enabled(yes) ->
 	    invoke_gmake_javall(build)
 	; true
 	).
 '$builder_hook'(java:build_docs) :- !,
 	% TODO: missing installation of docs
-	( with_java_interface(yes) ->
+	( enabled(yes) ->
 	    ( with_docs(yes) ->
 	        invoke_gmake_javall(docs)
 	    ; true
@@ -120,7 +120,7 @@ with_java_interface := ~get_bundle_flag(ciao_java:with_java_interface).
 	).
 
 '$builder_hook'(java:clean_bin) :-
-	( with_java_interface(yes) ->
+	( enabled(yes) ->
 	    invoke_gmake_javall(distclean) % TODO: 'clean' or 'distclean'?
 	; true
 	).
