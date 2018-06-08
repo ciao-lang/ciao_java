@@ -11,7 +11,7 @@
 :- doc(subtitle_extra,"@em{Printed on:} @today{}").
 
 :- doc(author, "Jes@'{u}s Correas").
-:- doc(author, "The CLIP Group").
+:- doc(author, "The Ciao Development Team").
 :- doc(address, "@tt{clip@@dia.fi.upm.es}").
 :- doc(address, "@tt{http://www.clip.dia.fi.upm.es/}").
 :- doc(address, "Facultad de Inform@'{a}tica").
