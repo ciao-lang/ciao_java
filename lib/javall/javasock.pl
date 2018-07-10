@@ -29,7 +29,6 @@ to Prolog interface) libraries instead.
 
 ").
 
-:- use_module(library(fastrw), [fast_read/1, fast_write/1]).
 :- use_module(library(sockets)).
 :- use_module(library(format)). 
 :- use_module(library(concurrency)). 
@@ -56,45 +55,37 @@ machine_name(X) :- atm(X).
 %% MESSAGE QUEUES
 %% Dynamic predicates used for communication between user threads and 
 %% socket handling threads.
-%% -----------------------------------------------------------------------
-%% -----------------------------------------------------------------------
+
 :- pred java_query(ThreadId,Query)
 	:: atm * term # "Data predicate containing the queries to be sent
         to Java. First argument is the Prolog thread Id, and second
         argument is the query to send to Java.".
-%% -----------------------------------------------------------------------
 :- concurrent java_query/2.
 
-%% -----------------------------------------------------------------------
 :- pred java_response(Id,Response)
 	:: atm * term # "Data predicate that stores the responses to
         requests received from Java. First argument corresponds to
         the Prolog thread Id; second argument corresponds to the
         response itself.".
-%% -----------------------------------------------------------------------
 :- concurrent java_response/2.
 
-%% -----------------------------------------------------------------------
 :- pred prolog_query(Id, Query)
 	:: int * term # "Data predicate that keeps a queue of the queries
         requested to Prolog side from Java side.".
-%% -----------------------------------------------------------------------
 :- concurrent prolog_query/2.
 
-%% -----------------------------------------------------------------------
 :- pred prolog_response(Id, Response)
 	:: int * term # "Data predicate that keeps a queue of the responses
         to queries requested to Prolog side from Java side.".
-%% -----------------------------------------------------------------------
 :- concurrent prolog_response/2.
 
 %% -----------------------------------------------------------------------
+
 :- pred start_socket_interface(+Address,+Stream) 
 	:: term * stream
         # "Given an address in format 'node:port', creates the sockets
         to connect to the java process, and starts the threads needed
         to handle the connection.". 
-%% -----------------------------------------------------------------------
 
 start_socket_interface(Node:SocketId,Stream):-
         java_client(Node:SocketId,Stream),
@@ -102,13 +93,13 @@ start_socket_interface(Node:SocketId,Stream):-
 	start_threads.
 
 %% -----------------------------------------------------------------------
-:- pred start_threads
 
+:- pred start_threads
         # "Starts the threads that will handle the connection to
           Java. This predicate is declared public for internal
           purposes, and it is not intended to be used by a user
           program.".
-%% -----------------------------------------------------------------------
+
 start_threads:-
 	eng_call(pj_socket_reader, create, create, PjIn),
 	eng_call(pj_socket_writer, create, create, PjOut),
@@ -118,10 +109,11 @@ start_threads:-
 	set_fact(java_threads(PjIn,PjOut,JpIn,JpOut,PS)).
 
 %% -----------------------------------------------------------------------
+
 :- pred stop_socket_interface # "Closes the sockets to disconnect from 
         the java process, and waits until the threads that handle the
         connection terminate.".
-%% -----------------------------------------------------------------------
+
 stop_socket_interface :-
 	assertz_fact(java_query(0,'$terminate')),
 	assertz_fact(prolog_response(0,'$terminate')),
@@ -147,9 +139,10 @@ stop_socket_interface :-
 	!.
 
 %% -----------------------------------------------------------------------
+
 :- pred join_socket_interface # "Waits until the threads that handle the
         connection terminate.".
-%% -----------------------------------------------------------------------
+
 join_socket_interface:-
 	java_threads(PjIn,PjOut,JpIn,JpOut,PlServer),
 	eng_wait(PjIn),
@@ -158,17 +151,17 @@ join_socket_interface:-
 	eng_wait(JpOut),
 	eng_wait(PlServer),
 %	!,
-	retract_fact_nb(java_stream(DataStream,EventStream,_,_)),
+	retract_fact_nb(java_stream(DataStream,EventStream,_,_)), % TODO: cut?
         close(DataStream),
         close(EventStream).
-
 join_socket_interface.
 
 %% -----------------------------------------------------------------------
+
 :- pred pj_socket_reader/0 # "Predicate that runs in a separate thread
 	reading from the prolog-to-java socket. If receives a disconnect
         or terminate request, just finish the thread.".
-%% -----------------------------------------------------------------------
+
 pj_socket_reader :-
 	repeat,
 	  java_fast_read(pj,pj(Id,R)),
@@ -257,21 +250,21 @@ java_client(Address,Stream) :-
 %% -----------------------------------------------------------------------
 :- pred open_client(+Address, -Stream, -Stream)
 	:: term * stream * stream
-        # "Given an address (@tt{Host:Port} format), creates and synchronizes
-	  the sockets to the java process.".
+        # "Given an address (@tt{Hostname:Port} format), creates and
+	  synchronizes the sockets to the java process.".
 %% -----------------------------------------------------------------------
 
-open_client(Host:Port,PJStream,JPStream) :-
-	open_pj(Host, Port, PJStream),
-	open_jp(Host, Port, JPStream).
+open_client(Hostname:Port,PJStream,JPStream) :-
+	open_pj(Hostname, Port, PJStream),
+	open_jp(Hostname, Port, JPStream).
 
-open_pj(Host, Port, PJStream) :-
-        connect_to_socket(Host, Port, PJStream),
+open_pj(Hostname, Port, PJStream) :-
+        connect_to_socket(Hostname, Port, PJStream),
 	java_fast_write0(PJStream,pj(0,data)),
         java_fast_read0(PJStream, pj(0,data)).
 
-open_jp(Host, Port, JPStream) :-
-        connect_to_socket(Host, Port, JPStream),
+open_jp(Hostname, Port, JPStream) :-
+        connect_to_socket(Hostname, Port, JPStream),
 	java_fast_write0(JPStream,jp(0,event)),
         java_fast_read0(JPStream, jp(0,event)).
 
@@ -291,13 +284,18 @@ bind_socket_interface(Port):-
 	start_threads.
 
 %% -----------------------------------------------------------------------
+
+:- use_module(library(sockets/sockets_io), [
+    serve_socket/3,
+    socket_recv_fastrw/2,
+    socket_send_fastrw/2 
+   ]).
+
 :- pred java_server(+Port)
 	:: int
         # "Given a @var{Port}, waits for a connection request from a
 	  Java client and synchronizes the sockets to the java
 	  process.".
-%% -----------------------------------------------------------------------
-:- use_module(library(sockets/sockets_io), [serve_socket/3]).
 
 java_server(Port) :-
 	java_debug('inside open_server'),
@@ -307,40 +305,35 @@ java_server(Port) :-
 	wait_connection,
 	java_debug('after open_server').
 
-binding(Stream):-
+binding(Stream, yes):-
         java_fast_read0(Stream, Term),
-	(Term = pj(0,data) ->
-	 bind_pj(Stream)
-	;(Term = jp(0,event) ->
-	  bind_jp(Stream)
-	 ;
-	     format(user_error,
-	     '{ERROR: Socket error accepting connections from java!~n}',[]),
-	     !,
-	     fail
-	 )).
+	( Term = pj(0,data) ->
+	    bind_pj(Stream)
+	; Term = jp(0,event) ->
+	    bind_jp(Stream)
+	; format(user_error, '{ERROR: Socket error accepting connections from java!~n}',[]),
+	  fail
+	).
 
 bind_pj(PJStream) :-
 %        java_fast_read0(PJStream, pj(0,data)),
 	java_fast_write0(PJStream,pj(0,data)),
-	java_stream(_,JPStream,Address,Stream),
+	java_stream(_,JPStream,Address,Stream), % TODO: cut?
 	set_fact(java_stream(PJStream,JPStream,Address,Stream)).
 	
-
 bind_jp(JPStream) :-
 %        java_fast_read0(JPStream, jp(0,event)),
 	java_fast_write0(JPStream,jp(0,event)),
-	java_stream(PJStream,_,Address,Stream),
+	java_stream(PJStream,_,Address,Stream), % TODO: cut?
 	set_fact(java_stream(PJStream,JPStream,Address,Stream)).
 
 sock_error(Error):-
-	format(user_error,
-	'{ERROR: Socket error while trying to connect to java!~n~w}',[Error]),
+	format(user_error, '{ERROR: Socket error while trying to connect to java!~n~w}',[Error]),
 	fail.
 
 wait_connection:-
 	java_debug('waiting for connection established'),
-	java_stream(PJStream,JPStream,_,_),
+	java_stream(PJStream,JPStream,_,_), % TODO: cut?
 	(var(PJStream) ; var(JPStream)),
 	!,
 	wait_connection.
@@ -348,75 +341,60 @@ wait_connection.
 	
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+get_java_stream(pj, S) :-
+        current_fact(java_stream(PJStream,_,_,_)),
+	!,
+	S = PJStream.
+get_java_stream(jp, S) :-
+        current_fact(java_stream(_,JPStream,_,_)),
+	!,
+	S = JPStream.
 
-%% -----------------------------------------------------------------------
+check_stream(Stream) :-
+        ( current_stream(_N,socket,Stream) ->
+	    true
+	; format(user_error, '{ERROR: the connection has been shut down!}',[]),
+	  fail
+        ).
+
+% -----------------------------------------------------------------------
 :- pred java_fast_write(+Type, +Term) 
-	:: atom * term # " It writes on the given stream type the term
+	:: atom * term # "It writes on the given stream type the term
         received as second argument. This is the basic predicate used
         to send data to the Java side. The first argument
 	reflects the socket (prolog-to-java or java-to-prolog).
         The second argument is the term to be sent to the Java side.".
-%% -----------------------------------------------------------------------
-java_fast_write(pj,T) :-
-        current_fact(java_stream(PJStream,_,_,_)),
-        java_fast_write0(PJStream,T),
-        !.  %% Avoid choicepoints (none should have been pushed---just in case)
 
-java_fast_write(jp,T) :-
-        current_fact(java_stream(_,JPStream,_,_)),
-        java_fast_write0(JPStream,T),
-        !.  %% Avoid choicepoints (none should have been pushed---just in case)
+java_fast_write(Type,T) :-
+        get_java_stream(Type, Stream),
+        java_fast_write0(Stream, T).
 
 java_fast_write0(Stream,T) :-
-        (current_stream(_N,socket,Stream) ->
-	 current_output(CU),
-	 set_output(Stream),
-	 fast_write(T),
-	 flush_output(Stream),
-	 set_output(CU)
-	;
-	 format(user_error,
-	 '{ERROR: the connection with java has been shut down!}',[]),
-	 fail
-        ).
+	check_stream(Stream),
+	socket_send_fastrw(Stream, T).
 
-%% -----------------------------------------------------------------------
+% -----------------------------------------------------------------------
 :- pred java_fast_read(+Type, -Term) :: atom * term # "It reads from the
 	given stream type one term and unifies it with the term received as
 	second argument. This is the basic predicate used to receive data
 	from the Java side. The first argument reflects the socket type
 	(prolog-to-java or java-to-prolog). The second argument is
         unified with the data received from the socket.".
-%% -----------------------------------------------------------------------
 
-java_fast_read(pj, T) :-
-        current_fact(java_stream(PJStream,_,_,_)),
-        java_fast_read0(PJStream,T),
-        !.  %% Avoid choicepoints (none should have been pushed---just in case)
-
-java_fast_read(jp, T) :-
-        current_fact(java_stream(_,JPStream,_,_)),
-        java_fast_read0(JPStream,T),
-        !.  %% Avoid choicepoints (none should have been pushed---just in case)
+java_fast_read(Type, T) :-
+	get_java_stream(Type, Stream),
+        java_fast_read0(Stream, T).
 
 java_fast_read0(Stream,T) :-
-        (current_stream(_N,socket,Stream) ->
-	 current_input(CU),
-	 set_input(Stream),
-	 fast_read(T),
-	 set_input(CU)
-        ;
-	 format(user_error,
-	 '{ERROR: the connection with java has been shut down!}',[]),
-	 fail
-        ).
+	check_stream(Stream),
+	socket_recv_fastrw(Stream, T).
 
-%% -----------------------------------------------------------------------
+% ---------------------------------------------------------------------------
 :- pred is_connected_to_java/0
 	# "Checks if the connection to Java is established.".
-%% -----------------------------------------------------------------------
+
 is_connected_to_java :-
-	current_fact_nb(java_stream(_,_,_,_)).
+	current_fact_nb(java_stream(_,_,_,_)). % TODO: cut?
 
 %%------------------------------------------------------------------
 %% ONLY FOR DEBUGGING

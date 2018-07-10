@@ -158,6 +158,7 @@ answer(prolog_exception(X,Y)) :- int(X), nonvar(Y).
 prolog_query_id(prolog_query_id(X)) :- nonvar(X).
 
 %----------------------------------------------------------------------------
+
 :- pred prolog_server/0
 	# "Prolog server entry point. Reads from the standard input
 	  the node name and port number where the java client resides,
@@ -177,7 +178,7 @@ prolog_query_id(prolog_query_id(X)) :- nonvar(X).
 
 @cindex{Prolog server}
 ".
-%----------------------------------------------------------------------------
+
 prolog_server :-
 	current_host(Node),
 	get_port(user_input,Port),
@@ -186,6 +187,7 @@ prolog_server :-
 	eng_killothers.
 
 %----------------------------------------------------------------------------
+
 :- pred prolog_server/1
 	:: atm
 	# "Waits for incoming Java connections to act as a Prolog goal
@@ -202,7 +204,7 @@ prolog_server :-
           connections, some work is being done in that direction.
 @cindex{Prolog server}
 ".
-%----------------------------------------------------------------------------
+
 prolog_server(Port) :-
 	int(Port),
 	bind_socket_interface(Port),
@@ -218,6 +220,7 @@ prolog_server_:-
 	prolog_server_.
 
 %----------------------------------------------------------------------------
+
 :- pred prolog_server/2
 	:: atm * atm
 	# "Prolog server entry point. Given a network @tt{node} and a
@@ -237,7 +240,7 @@ prolog_server_:-
 	  @tt{prolog_server/1}.
 @cindex{Prolog server}
 ".
-%----------------------------------------------------------------------------
+
 prolog_server(Node,Port) :-
 	int(Port),
 	atom(Node),
@@ -246,10 +249,10 @@ prolog_server(Node,Port) :-
 	eng_killothers.
 
 %% -----------------------------------------------------------------------
+
 :- pred get_port(+Stream,-Port)
 	:: atom * atom # "Gets the port number to connect to Java
 	server, reading it from the stream received as argument.".
-%% -----------------------------------------------------------------------
 
 get_port(Stream,Port):-
         current_input(CU),
@@ -258,12 +261,13 @@ get_port(Stream,Port):-
         set_input(CU).
 
 %----------------------------------------------------------------------------
+
 :- pred shell_s/0 # "Command execution loop. This predicate is called
 	when the connection to Java is established, and performs an endless 
         loop processing the commands received. This predicate is only intended
         to be used by the Prolog to Java interface and it should not be used
         by a user program.".
-%----------------------------------------------------------------------------
+
 shell_s :- 
 	read_command(Id,Command), % Gives commands on backtracking.
 	(termination_check(Command) -> 
@@ -280,12 +284,13 @@ shell_s :-
 	shell_s.
 
 %---------------------------------------------------------------------------
+
 :- pred process_command(+Id,+Command) 
 	:: prolog_query_id * command 
         # "Processes the first command of a query. Using the threads
         option, it processes all the commands received from the prolog
         server.".
-%---------------------------------------------------------------------------
+
 process_command(Id,prolog_is_running) :-
 	%% Checks if the query received as argument is still running,
         %% or there are solutions not requested from Java.
@@ -454,43 +459,49 @@ check_solution(Query,Id,Error) :-
 	!.
 */
 %---------------------------------------------------------------------------
+
 :- use_module(library(read_from_string), [read_from_string_atmvars/2]).
+
 :- pred prolog_parse(+String, -Term)
         :: string * term
         # "Parses the string received as first argument and returns
 	   the prolog term as second argument.
            @bf{Important:} This is a private predicate but could be called
            from java side, to parse strings to Prolog terms.".
-%---------------------------------------------------------------------------
+
 prolog_parse(S,Term) :-
 	read_from_string_atmvars(S, Term).
 
 %---------------------------------------------------------------------------
+
 :- pred write_answer(+Id,+Answer)
 	:: prolog_query_id * answer
         # "writes to the output socket stream the given answer.".
-%---------------------------------------------------------------------------
+
 write_answer(Id,Answer) :-
 	assertz_fact(prolog_response(Id,Answer)).
 
 %---------------------------------------------------------------------------
+
 :- pred read_command(-Id,-Command)
 	:: prolog_query_id * command
         # "Reads from the input stream a new prolog server command.".
-%---------------------------------------------------------------------------
+
 read_command(Id,Command) :-
 	retract_fact(prolog_query(Id,Command)).
 
 % -----------------------------------------------------------------------
+
 :- pred termination_check(+Term)
 	:: atm # "Checks if the termination atom is received.".
-% -----------------------------------------------------------------------
+
 termination_check('$terminate').
 termination_check('$disconnect').
 
 % -----------------------------------------------------------------------
+
 :- pred thread_id(-Term)
 	:: term # "Gets an unique id for the current thread.".
-% -----------------------------------------------------------------------
+
 thread_id(Id) :-
 	eng_goal_id(Id).
