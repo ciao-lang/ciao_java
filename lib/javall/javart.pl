@@ -191,6 +191,7 @@ endless loop of exceptions bouncing from one side to another.
 :- use_module(library(concurrency)).
 :- use_module(library(iso_char)).
 :- use_module(library(lists)).
+:- use_module(engine(stream_basic)).
 :- use_module(library(read), [read/2]).
 :- use_module(library(write), [write/1]).
 :- use_module(library(javall/javasock)).

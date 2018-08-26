@@ -8,6 +8,7 @@
 :- use_module(library(system), [find_executable/2]).
 :- use_module(library(process), [process_call/3]).
 :- use_module(library(lists), [append/3]).
+:- use_module(engine(system_info), [get_platform/1]).
 
 :- bundle_flag(enabled, [
     comment("Enable Java interface"),
