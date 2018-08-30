@@ -33,6 +33,7 @@ to Prolog interface) libraries instead.
 :- use_module(engine(io_basic)).
 :- use_module(library(sockets)).
 :- use_module(library(format)). 
+:- use_module(engine(data_facts)).
 :- use_module(library(concurrency)). 
 :- use_module(library(javall/jtopl)).
 

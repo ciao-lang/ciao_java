@@ -43,6 +43,7 @@ using the built-in predicates dealing with code loading.
 
 ").
 
+:- use_module(engine(data_facts)).
 :- use_module(library(concurrency)).
 :- use_module(library(system)).
 :- use_module(engine(stream_basic)).

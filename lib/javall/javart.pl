@@ -188,6 +188,7 @@ endless loop of exceptions bouncing from one side to another.
 
 ").
 
+:- use_module(engine(data_facts)).
 :- use_module(library(concurrency)).
 :- use_module(library(iso_char)).
 :- use_module(library(lists)).
