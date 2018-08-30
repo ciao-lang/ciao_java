@@ -121,7 +121,7 @@ make_filter(case_ins, Pred, LPredsAux, LPreds):- %!,
 make_filter(reg_exp, Pred, LPredsAux, LPreds):-
 	filter_regmatch(Pred, LPredsAux, LPreds).
 
-:- use_module(engine(prolog_flags), [push_prolog_flag/2, pop_prolog_flag/1]).
+:- use_module(engine(runtime_control), [push_prolog_flag/2, pop_prolog_flag/1]).
 
 :- doc(doinclude, filter_cimatch/3).
 :- pred filter_cimatch(+Pred, +LPredsIn, -LPredsOut) # "Performs a

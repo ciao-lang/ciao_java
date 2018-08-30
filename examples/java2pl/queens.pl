@@ -1,7 +1,7 @@
 %% Sicstus 0.7, pizarro, debug code (-g, no -O): 5670ms
 
 :- module(queens, [queens/2]).
-:- use_module(library(prolog_sys), [statistics/2]).
+:- use_module(engine(runtime_control), [statistics/2]).
 :- use_module(library(format), [format/2]).
 
 :- set_prolog_flag(multi_arity_warnings,off).
