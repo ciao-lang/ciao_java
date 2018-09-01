@@ -16,7 +16,6 @@
 	    hiord
         ]).
 
-:- use_module(engine(data_facts)).
 :- use_module(library(aggregates)).
 :- use_module(library(terms), [atom_concat/2]).
 :- use_module(library(javall/javart)).

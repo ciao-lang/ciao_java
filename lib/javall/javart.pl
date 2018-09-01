@@ -21,7 +21,7 @@
         java_add_listener/3,
         java_remove_listener/3
 	],
-	[assertions,regtypes,isomodes]).
+	[assertions,regtypes,isomodes,datafacts]).
 
 :- doc(title,"Prolog to Java interface").
 
@@ -188,7 +188,6 @@ endless loop of exceptions bouncing from one side to another.
 
 ").
 
-:- use_module(engine(data_facts)).
 :- use_module(library(concurrency)).
 :- use_module(library(iso_char)).
 :- use_module(library(lists)).
