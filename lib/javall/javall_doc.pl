@@ -20,7 +20,7 @@
 :- doc(copyright,"
 Copyright @copyright{} 1996-2002 Jes@'{u}s Correas Fern@'{a}ndez/The CLIP Group.
 
-@include{DocCopyright.lpdoc}
+@include{FreeDocLicense.lpdoc}
 ").
 
 :- doc(summary,"@include{javall/JavallSumm.lpdoc}").
