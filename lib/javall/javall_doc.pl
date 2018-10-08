@@ -89,6 +89,6 @@ mind that the goal is to reach a distributed environment, so each side do
 the things it is best designed for. 
 
 ").
-:- push_prolog_flag(unused_pred_warnings, no).
+
 main.
-:- pop_prolog_flag(unused_pred_warnings).
+
