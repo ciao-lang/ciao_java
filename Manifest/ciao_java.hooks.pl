@@ -16,36 +16,36 @@
     %
     default_comment("javac and javadoc detected"),
     default_value_comment(no,
-        "Java has not been detected. If you would like to use the\n"||
-        "utilities for the Java interface it is highly recommended that\n"||
-        "you stop the Ciao configuration now and install Java first."),
-% 	    "If Java is already installed and you use Debian/Ubuntu perhaps\n"||
-% 	    "you forgot to run: sudo update-java-alternatives --set java-6-sun."
+    "Java has not been detected. If you would like to use the\n"||
+    "utilities for the Java interface it is highly recommended that\n"||
+    "you stop the Ciao configuration now and install Java first."),
+%           "If Java is already installed and you use Debian/Ubuntu perhaps\n"||
+%           "you forgot to run: sudo update-java-alternatives --set java-6-sun."
     rule_default(HasJava, has_javac(HasJava)),
     %
     interactive([advanced])
 ]).
 
 has_javac(Value) :-
-	( javac_installed, javadoc_installed -> Value = yes ; Value = no ).
+    ( javac_installed, javadoc_installed -> Value = yes ; Value = no ).
 
 javac_installed :-
-	find_executable('javac', _),
-	is_sun_javac.
+    find_executable('javac', _),
+    is_sun_javac.
 
 % TODO: Any better way to detect Sun Java? (EMM)
 is_sun_javac :-
-	process_call(path(javac), ['-version'],
-	             [stderr(stdout), stdout(string(String)), status(_)]),
-	append(_, "javac 1."||_, String),
-	process_call(path(java), ['-version'],
-	             [stderr(stdout), stdout(string(SJava)), status(_)]),
-	% Kludge: In linux 64, you have to use the 64-bit Server VM --EMM
-	( ( get_platform('LINUXi686') ; get_platform('LINUXx86_64') ) ->
-	    append(_, "64-Bit"||_, SJava)
-	; true
-	),
-	!.
+    process_call(path(javac), ['-version'],
+                 [stderr(stdout), stdout(string(String)), status(_)]),
+    append(_, "javac 1."||_, String),
+    process_call(path(java), ['-version'],
+                 [stderr(stdout), stdout(string(SJava)), status(_)]),
+    % Kludge: In linux 64, you have to use the 64-bit Server VM --EMM
+    ( ( get_platform('LINUXi686') ; get_platform('LINUXx86_64') ) ->
+        append(_, "64-Bit"||_, SJava)
+    ; true
+    ),
+    !.
 
 javadoc_installed :- find_executable('javadoc', _).
 
@@ -70,10 +70,10 @@ javadoc_installed :- find_executable('javadoc', _).
 
 has_ant(no,  no).
 has_ant(yes, HasAnt) :-
-	has_ant_(HasAnt).
+    has_ant_(HasAnt).
 
 has_ant_(Value) :-
-	( ant_installed -> Value = yes ; Value = no ).
+    ( ant_installed -> Value = yes ; Value = no ).
 
 ant_installed :- find_executable('ant', _).
 
@@ -83,12 +83,12 @@ ant_installed :- find_executable('ant', _).
 ]).
 
 get_ant_cmd(CmdPath) :-
-	( find_executable('ant', Path0) ->
-	    CmdPath = Path0
-	; % error_message("Cannot find any version of 'ant' command in the path."),
-	  CmdPath = '' % TODO: Make it optional
-	  % fail
-	).
+    ( find_executable('ant', Path0) ->
+        CmdPath = Path0
+    ; % error_message("Cannot find any version of 'ant' command in the path."),
+      CmdPath = '' % TODO: Make it optional
+      % fail
+    ).
 
 % ===========================================================================
 :- doc(section, "Build rules").
@@ -106,30 +106,30 @@ get_ant_cmd(CmdPath) :-
 enabled := ~get_bundle_flag(ciao_java:enabled).
 
 '$builder_hook'(java:build_bin) :- !,
-	( enabled(yes) ->
-	    invoke_gmake_javall(build)
-	; true
-	).
+    ( enabled(yes) ->
+        invoke_gmake_javall(build)
+    ; true
+    ).
 '$builder_hook'(java:build_docs) :- !,
-	% TODO: missing installation of docs
-	( enabled(yes) ->
-	    ( with_docs(yes) ->
-	        invoke_gmake_javall(docs)
-	    ; true
-	    )
-	; true
-	).
+    % TODO: missing installation of docs
+    ( enabled(yes) ->
+        ( with_docs(yes) ->
+            invoke_gmake_javall(docs)
+        ; true
+        )
+    ; true
+    ).
 
 '$builder_hook'(java:clean_bin) :-
-	( enabled(yes) ->
-	    invoke_gmake_javall(distclean) % TODO: 'clean' or 'distclean'?
-	; true
-	).
+    ( enabled(yes) ->
+        invoke_gmake_javall(distclean) % TODO: 'clean' or 'distclean'?
+    ; true
+    ).
 
 :- use_module(ciaobld(builder_aux), [invoke_gmake/2]).
 
 invoke_gmake_javall(Cmd) :-
-	invoke_gmake(~bundle_path(ciao_java, 'lib/javall'), [Cmd]).
+    invoke_gmake(~bundle_path(ciao_java, 'lib/javall'), [Cmd]).
 
 % ----------------------------------------------------------------
 :- doc(section, "Tests and Benchmarks").
@@ -141,16 +141,16 @@ invoke_gmake_javall(Cmd) :-
 :- use_module(ciaobld(ciaoc_aux), [invoke_ciaosh_batch/1]).
 
 '$builder_hook'(test) :- !,
-	% runtests_dir(ciao_java, 'tests'),
-	runtests_ciaotests_hook.
+    % runtests_dir(ciao_java, 'tests'),
+    runtests_ciaotests_hook.
 
 % (integration tests)
 runtests_ciaotests_hook :-
-	working_directory(ThisDir, ~bundle_path(ciao_java, 'tests')),
-	invoke_ciaosh_batch([
-          use_module(library(unittest), [show_test_summaries/1, run_tests_in_module/3]),
-	  run_tests_in_module(test_java, [dump_output, dump_error, rtc_entry], TS),
-	  show_test_summaries(TS)
-	]),
-	working_directory(_, ThisDir).
+    working_directory(ThisDir, ~bundle_path(ciao_java, 'tests')),
+    invoke_ciaosh_batch([
+      use_module(library(unittest), [show_test_summaries/1, run_tests_in_module/3]),
+      run_tests_in_module(test_java, [dump_output, dump_error, rtc_entry], TS),
+      show_test_summaries(TS)
+    ]),
+    working_directory(_, ThisDir).
 

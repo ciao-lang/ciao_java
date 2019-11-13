@@ -3,5 +3,5 @@
 
 :- use_module(library(javall/jtopl)).
 
-main :-	
-	prolog_server.
+main :- 
+    prolog_server.

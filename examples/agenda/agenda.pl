@@ -1,20 +1,20 @@
 :- module(agenda, 
-        [
-            main/0,
-            main_java/0,
-            search/4,
-            delete/3,
-            insert/2,
-            exit/0
-        ], 
-        [
-            persdb,
-            assertions,
-            isomodes,
-	    regexp,
-	    dynamic,
-	    hiord
-        ]).
+    [
+        main/0,
+        main_java/0,
+        search/4,
+        delete/3,
+        insert/2,
+        exit/0
+    ], 
+    [
+        persdb,
+        assertions,
+        isomodes,
+        regexp,
+        dynamic,
+        hiord
+    ]).
 
 :- use_module(library(aggregates)).
 :- use_module(library(terms), [atom_concat/2]).
@@ -59,8 +59,8 @@ persistent_dir(db,'./persistent_agenda').
 
 
 main:-
-	main_java,
-	retract_fact(termination).
+    main_java,
+    retract_fact(termination).
 
 main_java :-
 %%   Start Java process.
@@ -87,25 +87,25 @@ fourth argument as a list of @pred{agenda/5} compound terms.".
 
 search(_, [], _, []) .
 search(Table, FieldValues, SearchMode, ResultList) :-
-	prepare_search(SearchMode, Table, FieldValues, ResultList).
+    prepare_search(SearchMode, Table, FieldValues, ResultList).
 
 prepare_search(normal, Table, LValues, LPreds):- %!,
-	get_single_query(Table, LValues, Pred),
-	findall(Pred, Pred, LPreds).
+    get_single_query(Table, LValues, Pred),
+    findall(Pred, Pred, LPreds).
 
 prepare_search(Search_Mode,Table, LValues, LPreds):-
-	get_single_query(Table, LValues, Pred),
-	VarList = [_A,_B,_C,_D,_E],
-%	get_free_vars(1, 5, VarList),
-	PredAux=..[Table|VarList],
-	findall(PredAux, PredAux, LPredsAux),
-	make_filter(Search_Mode, Pred, LPredsAux, LPreds).
+    get_single_query(Table, LValues, Pred),
+    VarList = [_A,_B,_C,_D,_E],
+%       get_free_vars(1, 5, VarList),
+    PredAux=..[Table|VarList],
+    findall(PredAux, PredAux, LPredsAux),
+    make_filter(Search_Mode, Pred, LPredsAux, LPreds).
 
 % get_free_vars(N, A, []):- N > A , !.
 % get_free_vars(N, A, [V|Vs]):-
-% 	var(V),
-% 	N1 is N + 1,
-% 	get_free_vars(N1, A, Vs).
+%       var(V),
+%       N1 is N + 1,
+%       get_free_vars(N1, A, Vs).
 
 
 :- doc(doinclude, make_filter/4).
@@ -117,9 +117,9 @@ a list of candidates for match @var{LPredsIn}, it obtains a list
 
 
 make_filter(case_ins, Pred, LPredsAux, LPreds):- %!,
-	filter_cimatch(Pred, LPredsAux, LPreds).
+    filter_cimatch(Pred, LPredsAux, LPreds).
 make_filter(reg_exp, Pred, LPredsAux, LPreds):-
-	filter_regmatch(Pred, LPredsAux, LPreds).
+    filter_regmatch(Pred, LPredsAux, LPreds).
 
 :- use_module(engine(runtime_control), [push_prolog_flag/2, pop_prolog_flag/1]).
 
@@ -132,12 +132,12 @@ candidates for match @var{LPredsIn}, and obtains a list
 
 filter_cimatch(_, [], []).
 filter_cimatch(Pred, [PredAux1|PAs], [PredAux1|Ps]):-
-	push_prolog_flag(case_insensitive,on), % TODO: find a better solution!
-	match_term(Pred, PredAux1), %!,
-	pop_prolog_flag(case_insensitive),
-	filter_cimatch(Pred, PAs, Ps).
+    push_prolog_flag(case_insensitive,on), % TODO: find a better solution!
+    match_term(Pred, PredAux1), %!,
+    pop_prolog_flag(case_insensitive),
+    filter_cimatch(Pred, PAs, Ps).
 filter_cimatch(Pred, [_PredAux1|PAs], Ps):-
-	filter_cimatch(Pred, PAs, Ps).
+    filter_cimatch(Pred, PAs, Ps).
 
 
 :- doc(doinclude, filter_regmatch/3).
@@ -149,18 +149,18 @@ according to that criterium.".
 
 filter_regmatch(_, [], []).
 filter_regmatch(Pred, [PredAux1|PAs], [PredAux1|Ps]):-
-	match_term(Pred, PredAux1), %!, 
-	filter_regmatch(Pred, PAs, Ps).
+    match_term(Pred, PredAux1), %!, 
+    filter_regmatch(Pred, PAs, Ps).
 filter_regmatch(Pred, [_PredAux1|PAs], Ps):-
-	filter_regmatch(Pred, PAs, Ps).
+    filter_regmatch(Pred, PAs, Ps).
 
 :- doc(doinclude, get_single_query/2).
 :- doc(get_single_query/2, " Gets a Prolog query @var{Pred} given
 a relation name @var{Table} and its values @var{FieldValues}.").
 
 get_single_query(Table, LFieldValues, Pred):-
-	turn2terms(LFieldValues, LFieldTerms),
-	Pred=..[Table|LFieldTerms].
+    turn2terms(LFieldValues, LFieldTerms),
+    Pred=..[Table|LFieldTerms].
 
 
 :- doc(doinclude, turn2terms/2).
@@ -169,20 +169,20 @@ get_single_query(Table, LFieldValues, Pred):-
 
 turn2terms([], []).
 turn2terms([Value|Values], [Term|Terms]):-
-	( empty_value(Value)->
-	    var(Term)               %just declarative
-        ; 
-	    Term=Value
-	),
-	turn2terms(Values, Terms).
+    ( empty_value(Value)->
+        var(Term)               %just declarative
+    ; 
+        Term=Value
+    ),
+    turn2terms(Values, Terms).
 
 empty_value('').
 empty_value('$empty').
 
 empty_list_values([]).
 empty_list_values([FieldValue|LFieldValues]):-
-        empty_value(FieldValue),
-        empty_list_values(LFieldValues).
+    empty_value(FieldValue),
+    empty_list_values(LFieldValues).
 
 
 
@@ -193,26 +193,26 @@ the rows to delete from the table.").
 
 delete(_, [], _) .
 delete(Table, FieldValues, SearchMode) :-
-	prepare_search(SearchMode, Table, FieldValues, LPreds),
-	my_retractall(LPreds).
+    prepare_search(SearchMode, Table, FieldValues, LPreds),
+    my_retractall(LPreds).
 
 my_retractall([]).
 my_retractall([P|Ps]):-
-	retract_fact(P),
-	my_retractall(Ps).
+    retract_fact(P),
+    my_retractall(Ps).
 
 
 :- doc(doinclude, insert/3).
 :- doc(insert/3, "Adds a new element into the table.").
 
 insert(Table, FieldValues) :-
-	get_single_query(Table, FieldValues, Pred),
-        ( empty_list_values(FieldValues) ->
-            fail
-        ; call(Pred) ->
-            fail
-        ; assertz_fact(Pred)).
+    get_single_query(Table, FieldValues, Pred),
+    ( empty_list_values(FieldValues) ->
+        fail
+    ; call(Pred) ->
+        fail
+    ; assertz_fact(Pred)).
 
 exit :-
-	java_stop,
-	set_fact(termination).
+    java_stop,
+    set_fact(termination).

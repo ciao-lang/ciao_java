@@ -10,12 +10,12 @@ filepath := ~ciaofilepath_common.
 filepath := at_bundle(ciao_java, 'lib').
 
 doc_structure := 
-	'javall/javall_doc'-[
-	  'javall/javart',
-	  'javall/jtopl',
-          %
-	  'javall/javasock'
-        ].
+    'javall/javall_doc'-[
+      'javall/javart',
+      'javall/jtopl',
+      %
+      'javall/javasock'
+    ].
 
 %doc_mainopts := no_patches.
 doc_mainopts := _ :- fail. % Allow patches in main changelog (those are the release notes)
