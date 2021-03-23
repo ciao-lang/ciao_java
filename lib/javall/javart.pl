@@ -59,12 +59,13 @@ the objects we use. The user must be aware that different requests to the
 other side of the interface could run concurrently.
 
 
-@subsection{Prolog side of the Java interface} @cindex{Prolog to Java
-Interface Structure. Prolog side} The Prolog side receives the actions
-to do in the Java side from the user program, and sends them to the
-Java process through the socket connection.  When the action is done
-in the Java side, the result is returned to the user Prolog program,
-or the action fails if there is any problem in the Java side.
+@subsection{Prolog side of the Java interface} 
+@cindex{Prolog to Java Interface Structure. Prolog side} 
+The Prolog side receives the actions to do in the Java side from the
+user program, and sends them to the Java process through the socket
+connection.  When the action is done in the Java side, the result is
+returned to the user Prolog program, or the action fails if there is
+any problem in the Java side.
 
 Prolog data representation of Java elements is very simple in this
 interface. Java primitive types such as integers and characters are
@@ -133,8 +134,8 @@ where the java to prolog interface is explained.
 
 @section{Java event handling from Prolog}
 @cindex{Java event handling from Prolog}
-Java event handling is based on a delegation model since version
-1.1.x. This approach to event handling is very powerful and elegant, but a
+Java event handling is based on a delegation model since version 1.1.x.
+This approach to event handling is very powerful and elegant, but a
 user program cannot handle all the events that can arise on a given object:
 for each kind of event, a listener must be implemented and added
 specifically. However, the Java 2 API includes a special listener
