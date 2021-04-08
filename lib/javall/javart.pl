@@ -249,7 +249,7 @@ java_event(X) :- atm(X).
     uninstantiated when the event raises and the predicate is
     called.".
 
-prolog_goal(X) :- callable(X).
+prolog_goal(X) :- cgoal(X).
 
 %% -----------------------------------------------------------------------
 :- pred java_start

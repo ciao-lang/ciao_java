@@ -132,10 +132,9 @@ using the built-in predicates dealing with code loading.
 ".
 
 command(prolog_launch_query(Query)) :-
-    callable(Query).
-
+    cgoal(Query).
 command(prolog_launch_query_on_thread(Query)) :-
-    callable(Query).
+    cgoal(Query).
 command(prolog_next_solution(_)).
 command(prolog_terminate_query(_)).
 command(prolog_halt).
@@ -401,7 +400,7 @@ process_command(Id,Command) :-
 
 %---------------------------------------------------------------------------
 :- pred solve(+Query, +JId)
-    :: callable * term
+    :: cgoal * term
     # "Runs the query on a separate thread and stores the solutions 
        on the @tt{query_solutions/2} data predicate.".
 %---------------------------------------------------------------------------
