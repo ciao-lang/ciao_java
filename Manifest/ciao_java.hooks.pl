@@ -148,9 +148,8 @@ invoke_gmake_javall(Cmd) :-
 runtests_ciaotests_hook :-
     working_directory(ThisDir, ~bundle_path(ciao_java, 'tests')),
     invoke_ciaosh_batch([
-      use_module(library(unittest), [show_test_summaries/1, run_tests_in_module/3]),
-      run_tests_in_module(test_java, [dump_output, dump_error, rtc_entry], TS),
-      show_test_summaries(TS)
+      use_module(library(unittest), [run_tests_in_module/2]),
+      run_tests_in_module(test_java, [rtc_entry])
     ]),
     working_directory(_, ThisDir).
 
